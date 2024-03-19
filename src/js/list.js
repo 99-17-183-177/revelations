@@ -69,15 +69,17 @@ export class Command {
     }
 }
 
-export const pictures = {
-    dade_fig_1: new Picture("dade_fig_1.txt", "dade_fig_1"),
-    dade_fig_2: new Picture("dade_fig_2.txt", "dade_fig_2"),
-    //picture_2: new Picture("pTest2.txt", "picture_2"),
-}
-
 export const articles = {
-    //test: new Article("test.txt", [pictures.picture_1, pictures.picture_2]),
-    ombra_dade: new Article("ombra_dade.txt", "Ombra su Dade City", [pictures.dade_fig_1, pictures.dade_fig_2]),
+    revelations_13: new Article("revelations_13.txt", "Revelations 13", []),
+    arcade_nights_1: new Article("arcade_nights_1.txt", "Arcade Nights 1", []),
+    spiral_1: new Article("spiral_1.txt", "Spiral 1", [
+        //new Picture("spiral_1_fig_1.txt", "fig_1"), 
+    ]),
+    ppd_1: new Article("ppd_1.txt", "PPD 1", []),
+    ombra_dade: new Article("ombra_dade.txt", "Ombra su Dade City", [
+        new Picture("dade_fig_1.txt", "fig_1"), 
+        new Picture("dade_fig_2.txt", "fig_2")
+    ]),
     terremoto_dimenticato: new Article("terremoto_dimenticato.txt", "Il Terremoto Dimenticato", []),
 }
 
@@ -95,11 +97,22 @@ export function listArticles() {
 }
 
 export function getArticle(key) {
-    return articles[key]
+    return articles[removeBrackets(key)]
 }
 
-export function getPicture(key) {
-    return pictures[key]
+export function getPicture(pictures, key) {
+    let k = removeBrackets(key)
+    for (let p in pictures) {
+        if (pictures[p].name == k)
+            return pictures[p]
+    }
+}
+
+function removeBrackets(string) {
+    if (!string || string.length == 0) return string;
+    if (string[0] == '[' && string[string.length-1] == ']')
+        return string.substring(1, string.length-1)
+    return string;
 }
 
 

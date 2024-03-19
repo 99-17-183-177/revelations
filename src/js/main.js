@@ -1,5 +1,6 @@
 
 import {listArticles, getArticle, getPicture, commands} from "./list.js";
+var currentPictures = []
 
 $(function() {
     $('body').terminal({
@@ -26,7 +27,7 @@ $(function() {
             
         },
         picture: async function(key) {
-            let p = getPicture(key);
+            let p = getPicture(currentPictures, key);
             if (!p) {
                 innerType(this, "Picture not found.")
                 return;
@@ -78,13 +79,15 @@ $(function() {
  }
 
  async function listPictures(terminal, article, addSpacingBefore = false, addSpacingAfter = false) {
+    currentPictures = []
     if (article && article.hasPictures()) {
         if (addSpacingBefore)
             await innerType(terminal, " ")
 
         await innerType(terminal, "Attached pictures:")
-        var pics = article.getPictures();
-        for (var p in pics) {
+        let pics = article.getPictures();
+        currentPictures = pics;
+        for (let p in pics) {
             await innerType(terminal, "- " + pics[p].name)
         }
         await innerType(terminal, "Type: 'picture [picture name]' to print picture")
@@ -95,20 +98,24 @@ $(function() {
  }
 
  async function type(terminal, text, paginate = true) {
-    var split = text.split('\n')
-    var lastWasEmpty = false;
+    let split = text.split('\n')
+    let lastWasEmpty = false;
+    let continuePrinted = false;
     if (split && split.length > 0) terminal.echo(" ")
     for (var i in split) {
         var isEmpty = !split[i] || split[i].trim().length == 0
         if (!isEmpty) {
+            continuePrinted = false;
             await innerType(terminal, split[i].trim())
         }
         else {
-            if (paginate && lastWasEmpty) {
-                var c = await terminal.read("Continue? (Y/n) ")
+            if (paginate && lastWasEmpty && !continuePrinted) {
+                continuePrinted = true;
+                let c = await terminal.read("Continue? (Y/n) ")
                 if (c != 'Y' && c != 'y' && c != '') break;
             }
-            await innerType(terminal, " ")
+            else
+                await innerType(terminal, " ")
         }
         terminal.resize();
         lastWasEmpty = isEmpty;
@@ -126,7 +133,6 @@ $(function() {
         const response = await fetch(file);
         if (response.ok) {
             const text = await response.text();
-            console.log(text);
             return text;
         }
     } catch (e) {
