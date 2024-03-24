@@ -37,10 +37,6 @@ body {
       font-family: 'Press Start 2P', cursive;
       text-shadow: 0 0 4px #F68A27;
   }
-  .terminal,
-  .cmd {
-      font-size: 12px;
-  } 
 
   .fgbg{
     width: 100%;

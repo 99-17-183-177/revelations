@@ -1,6 +1,6 @@
 
 import {listArticles, getArticle, getPicture, commands} from "./list.js";
-import { remoteLoad } from "./load.js";
+import { remoteLoadArticle } from "./load.js";
 var currentPictures = []
 
 $(function() {
@@ -40,7 +40,7 @@ $(function() {
         },
         archive: async function() {
             innerType(this, "Corrupted file - unable to load [ERR 1028]")
-        },
+        },  
     },
     {
         greetings: " ",
