@@ -1,5 +1,5 @@
 
-import {listArticles, getArticle, getPicture, commands} from "./list.js";
+import {listArticles, getArticle, getPicture, commands, remoteLoad} from "./list.js";
 var currentPictures = []
 
 $(function() {
@@ -37,9 +37,9 @@ $(function() {
         help: async function() {
             await printHelp(this)
         },
-       ciao: function() {
-        this.echo("Ciao Cosmo! Ti amo <3", { typing: true, delay: 50 })
-       },
+        test: async function(f) {
+            console.log(await remoteLoad(f))
+        },
     },
     {
         greetings: " ",
