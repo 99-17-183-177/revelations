@@ -75,7 +75,7 @@ export const articles = {
     journey_4: new Article("6 - journey_4.txt", "Journey 4", []),
     le_mani_rosse_1: new Article("5 - le_mani_rosse_1.txt", "Le Mani Rosse 1", []),
     ppd_11: new Article("4 - ppd_11.txt", "PPD 11", []),
-    vacuità_realtà: new Article("3 - vacuità_realtà.txt", "Vacuità Realtà", []),
+    vacuità_realtà_7: new Article("3 - vacuità_realtà_7.txt", "Vacuità Realtà", []),
     ombra_dade: new Article("2 - ombra_dade.txt", "Ombra su Dade City", [
         new Picture("dade_fig_1.txt", "fig_1"), 
         new Picture("dade_fig_2.txt", "fig_2")
