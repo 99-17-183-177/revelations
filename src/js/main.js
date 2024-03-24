@@ -1,7 +1,8 @@
 
 import {listArticles, getArticle, getPicture, commands} from "./list.js";
-import { remoteLoadArticle, remoteLoadPicture } from "./load.js";
+import { remoteLoad, loadLocal } from "./load.js";
 var currentPictures = []
+var maxLineSize = 100;
 
 $(function() {
     $('body').terminal({
@@ -18,7 +19,7 @@ $(function() {
             }
         },
         article: async function(key) {
-            let a = getArticle(key);
+            let a = key ? getArticle(key.toLowerCase()) : undefined;
             if (!a) {
                 innerType(this, "Article not found.")
                 return;
@@ -28,7 +29,7 @@ $(function() {
             
         },
         picture: async function(key) {
-            let p = getPicture(currentPictures, key);
+            let p = key ? getPicture(currentPictures, key.toLowerCase()) : undefined;
             if (!p) {
                 innerType(this, "Picture not found.")
                 return;
@@ -45,8 +46,8 @@ $(function() {
     {
         greetings: " ",
         onInit: async function() {
-            let text = await load("./src/static/revelations.txt")
-            await this.echo(text, { typing: true, delay: 2})
+            let text = await loadLocal("./src/static/revelations.txt")
+            await this.echo(text, { typing: true, delay: 2, wrap: false})
             await printHelp(this)
         },
         wrap: true
@@ -54,7 +55,7 @@ $(function() {
  });
 
  async function loadArticle(terminal, a) {
-    const response = await remoteLoadArticle(a.getFilePath());
+    const response = await remoteLoad(a.getFilePath());
     return type(terminal, response)
     .then(
         () => {
@@ -67,7 +68,7 @@ $(function() {
  }
 
  async function loadPicture(terminal, p) {
-    const response = await remoteLoadPicture(p.getFilePath());
+    const response = await remoteLoad(p.getFilePath());
     return type(terminal, response, false)
     .then(
         () => {
@@ -107,7 +108,20 @@ $(function() {
         var isEmpty = !split[i] || split[i].trim().length == 0
         if (!isEmpty) {
             continuePrinted = false;
-            await innerType(terminal, split[i].trim())
+            let line = split[i].trim()
+            /*console.log("max", maxLineSize, terminal.cols())
+            let max = maxLineSize > terminal.cols() ? 100000 : maxLineSize;
+            if (line.length > max) {
+
+                let chunks = line.match(new RegExp('.{1,' + max + '}', 'g'));
+                console.log("chunks", chunks)
+                for (let c in chunks) {
+                    await innerType(terminal, chunks[c].trim())
+                }
+            }
+            else {*/
+                await innerType(terminal, line)
+            //}
         }
         else {
             if (paginate && lastWasEmpty && !continuePrinted) {
@@ -118,7 +132,7 @@ $(function() {
             else
                 await innerType(terminal, " ")
         }
-        terminal.resize();
+        terminal.resize(maxLineSize);
         lastWasEmpty = isEmpty;
     }
     if (split && split.length > 0) terminal.echo(" ")

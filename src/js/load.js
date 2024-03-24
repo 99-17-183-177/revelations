@@ -1,5 +1,6 @@
 var host = "https://99-17-183-177.github.io/articles-outrun/";
 var alternativeHost = "src/static/"; 
+var useAlternativeHost = false;
 var listFile = "index.txt"; 
 export var articles = {};
 
@@ -9,6 +10,7 @@ function loadArticles(h = host) {
         response => {
             console.log("response", response)
             if (!response.ok) throw response.status;
+            useAlternativeHost = h == alternativeHost;
             response.text()
             .then (
                 text => articles = parseArticleList(text)
@@ -26,18 +28,10 @@ function loadArticles(h = host) {
 
 loadArticles();
 
-export async function remoteLoadArticle(file) {
-    return remoteLoad(file, "articles/")
-}
-
-export async function remoteLoadPicture(file) {
-    return remoteLoad(file, "pictures/")
-}
-
-async function remoteLoad (file, type) {
+export async function remoteLoad (file) {
     if (file != listFile) {
         try {
-            const response = await fetch(host + type + file);
+            const response = await fetch((useAlternativeHost ? alternativeHost : host) + file);
             if (response.ok) {
                 const text = await response.text();
                 return text;
@@ -48,6 +42,18 @@ async function remoteLoad (file, type) {
     }
     return ["File not found."]
  }
+
+ export async function loadLocal (file) {
+    try {
+        const response = await fetch(file);
+        if (response.ok) {
+            const text = await response.text();
+            return text;
+        }
+    } catch (e) {
+        console.log(e)
+    }
+  }
 
 function parseArticleList(text) {
     console.log("parsing", text)
@@ -73,7 +79,7 @@ function parseArticleList(text) {
         let key = item[0].trim();
         let hidden = key[0] == '*';
         key = hidden ? key.substring(1) : key
-        articles[key] = new Article(item[1].trim(), item[2].trim(), pictures, hidden);
+        articles[key.toLowerCase()] = new Article(item[1].trim(), item[2].trim(), pictures, hidden);
     }
 
     return articles;
@@ -90,7 +96,7 @@ export class Picture {
     }
 
     getFilePath = () => {
-        return "./src/static/pictures/"+this.file
+        return "pictures/"+this.file
     }
 
     getName = () => {
@@ -112,7 +118,7 @@ export class Article {
     }
 
     getFilePath = () => {
-        return "./src/static/articles/"+this.file
+        return "articles/"+this.file
     }
 
     getPictures = () => {
