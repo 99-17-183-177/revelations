@@ -30,6 +30,10 @@ export async function remoteLoadArticle(file) {
     return remoteLoad(file, "articles/")
 }
 
+export async function remoteLoadPicture(file) {
+    return remoteLoad(file, "pictures/")
+}
+
 async function remoteLoad (file, type) {
     if (file != listFile) {
         try {

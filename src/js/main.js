@@ -1,6 +1,6 @@
 
 import {listArticles, getArticle, getPicture, commands} from "./list.js";
-import { remoteLoadArticle } from "./load.js";
+import { remoteLoadArticle, remoteLoadPicture } from "./load.js";
 var currentPictures = []
 
 $(function() {
@@ -54,7 +54,7 @@ $(function() {
  });
 
  async function loadArticle(terminal, a) {
-    const response = await load(a.getFilePath());
+    const response = await remoteLoadArticle(a.getFilePath());
     return type(terminal, response)
     .then(
         () => {
@@ -67,7 +67,7 @@ $(function() {
  }
 
  async function loadPicture(terminal, p) {
-    const response = await load(p.getFilePath());
+    const response = await remoteLoadPicture(p.getFilePath());
     return type(terminal, response, false)
     .then(
         () => {
@@ -126,20 +126,6 @@ $(function() {
 
  function innerType (terminal, text) {
     return terminal.echo(text, { typing: true, delay: 10 })
- }
- 
-
- async function load (file) {
-    try {
-        const response = await fetch(file);
-        if (response.ok) {
-            const text = await response.text();
-            return text;
-        }
-    } catch (e) {
-        console.log(e)
-    }
-    return ["File not found."]
  }
 
  async function printHelp(terminal) {
