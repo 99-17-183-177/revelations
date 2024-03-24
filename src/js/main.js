@@ -47,16 +47,21 @@ $(function() {
         greetings: " ",
         onInit: async function() {
             let text = await loadLocal("./src/static/revelations.txt")
-            await this.echo(text, { typing: true, delay: 2, wrap: false})
+            let lines = text.split("\n")
+            for (let l in lines) {
+                await this.echo(lines[l], { typing: true, delay: 2, wrap: false, keepWords: true})
+            }
+            this.echo(" ")
             await printHelp(this)
+            this.echo(" ")
         },
-        wrap: true
+        wrap: false
     });
  });
 
  async function loadArticle(terminal, a) {
     const response = await remoteLoad(a.getFilePath());
-    return type(terminal, response)
+    return type(terminal, response, true, true)
     .then(
         () => {
             return a;
@@ -69,7 +74,7 @@ $(function() {
 
  async function loadPicture(terminal, p) {
     const response = await remoteLoad(p.getFilePath());
-    return type(terminal, response, false)
+    return type(terminal, response, false, false)
     .then(
         () => {
             return a;
@@ -99,7 +104,7 @@ $(function() {
     }
  }
 
- async function type(terminal, text, paginate = true) {
+ async function type(terminal, text, paginate = true, doWrap = false) {
     let split = text.split('\n')
     let lastWasEmpty = false;
     let continuePrinted = false;
@@ -109,19 +114,10 @@ $(function() {
         if (!isEmpty) {
             continuePrinted = false;
             let line = split[i].trim()
-            /*console.log("max", maxLineSize, terminal.cols())
-            let max = maxLineSize > terminal.cols() ? 100000 : maxLineSize;
-            if (line.length > max) {
-
-                let chunks = line.match(new RegExp('.{1,' + max + '}', 'g'));
-                console.log("chunks", chunks)
-                for (let c in chunks) {
-                    await innerType(terminal, chunks[c].trim())
-                }
-            }
-            else {*/
-                await innerType(terminal, line)
-            //}
+            if (doWrap)
+            await innerTypeWrap(terminal, line)
+            else
+            await innerType(terminal, line)
         }
         else {
             if (paginate && lastWasEmpty && !continuePrinted) {
@@ -130,16 +126,20 @@ $(function() {
                 if (c != 'Y' && c != 'y' && c != '') break;
             }
             else
-                await innerType(terminal, " ")
+                terminal.echo(" ")
         }
-        terminal.resize(maxLineSize);
+        terminal.resize();
         lastWasEmpty = isEmpty;
     }
     if (split && split.length > 0) terminal.echo(" ")
  }
 
  function innerType (terminal, text) {
-    return terminal.echo(text, { typing: true, delay: 10 })
+    return terminal.echo(text, { typing: true, delay: 10})
+ }
+
+ function innerTypeWrap (terminal, text) {
+    return terminal.echo(text, { typing: true, delay: 10, wrap: true})
  }
 
  async function printHelp(terminal) {
