@@ -121,4 +121,5 @@ export const commands = {
     article: new Command("article [article name]", "Show the content of the article named [article name]."),
     picture: new Command("picture [picture name]", "Display the picture named [picture name]."),
     help: new Command("help", "Show these info."),
+    archive: new Command("archive", "Show archive."),
 }

@@ -38,8 +38,8 @@ $(function() {
         help: async function() {
             await printHelp(this)
         },
-        test: async function(f) {
-            console.log(await remoteLoad(f))
+        archive: async function() {
+            innerType(this, "Corrupted file - unable to load [ERR 1028]")
         },
     },
     {
