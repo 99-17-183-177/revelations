@@ -1,5 +1,6 @@
 
-import {listArticles, getArticle, getPicture, commands, remoteLoad} from "./list.js";
+import {listArticles, getArticle, getPicture, commands} from "./list.js";
+import { remoteLoad } from "./load.js";
 var currentPictures = []
 
 $(function() {
