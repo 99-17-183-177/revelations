@@ -1,4 +1,4 @@
-var host = "https://github.com/99-17-183-177/articles-outrun/blob/main/"
+var host = "https://99-17-183-177.github.io/articles-outrun/"
 
 
 export async function remoteLoad (file) {
