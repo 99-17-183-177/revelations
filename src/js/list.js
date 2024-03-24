@@ -70,17 +70,17 @@ export class Command {
 }
 
 export const articles = {
-    revelations_13: new Article("revelations_13.txt", "Revelations 13", []),
-    arcade_nights_1: new Article("arcade_nights_1.txt", "Arcade Nights 1", []),
-    spiral_1: new Article("spiral_1.txt", "Spiral 1", [
-        //new Picture("spiral_1_fig_1.txt", "fig_1"), 
-    ]),
-    ppd_1: new Article("ppd_1.txt", "PPD 1", []),
-    ombra_dade: new Article("ombra_dade.txt", "Ombra su Dade City", [
+    journey_5: new Article("8 - journey_5", "Journey 5", []),
+    apocalypse_1: new Article("7 - apocalypse_1.txt", "Apocalypse 1", []),
+    journey_4: new Article("6 - journey_4.txt", "Journey 4", []),
+    le_mani_rosse_1: new Article("5 - le_mani_rosse_1.txt", "Le Mani Rosse 1", []),
+    ppd_11: new Article("4 - ppd_11.txt", "PPD 11", []),
+    vacuità_realtà: new Article("3 - vacuità_realtà.txt", "Vacuità Realtà", []),
+    ombra_dade: new Article("2 - ombra_dade.txt", "Ombra su Dade City", [
         new Picture("dade_fig_1.txt", "fig_1"), 
         new Picture("dade_fig_2.txt", "fig_2")
     ]),
-    terremoto_dimenticato: new Article("terremoto_dimenticato.txt", "Il Terremoto Dimenticato", []),
+    terremoto_dimenticato: new Article("1 - terremoto_dimenticato.txt", "Il Terremoto Dimenticato", []),
 }
 
 export function listArticles() {
